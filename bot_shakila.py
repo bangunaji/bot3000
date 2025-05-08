@@ -1,6 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler
-import httpx
 
 # Start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -29,51 +28,40 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Callback for button presses
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    try:
-        await query.answer()
+    await query.answer()
 
-        if query.data == 'gift':
-            keyboard = [
-                [InlineKeyboardButton("🎁 Kotak Hadiah", callback_data='blue')]
-            ]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            await query.edit_message_text(text="Klik kotaknya untuk membuka hadiah:", reply_markup=reply_markup)
+    if query.data == 'gift':
+        keyboard = [
+            [InlineKeyboardButton("🎁 Kotak Hadiah", callback_data='blue')]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.edit_message_text(text="Klik kotaknya untuk membuka hadiah:", reply_markup=reply_markup)
 
-        elif query.data == 'blue':
-            await query.edit_message_text("🎁 Kotak Hadiah Berhasil Dibuka!!")
+    elif query.data == 'blue':
+        await query.edit_message_text("🎁 Kotak Hadiah Berhasil Dibuka!!")
 
-            # Kirim voice message
-            voice_path = "ucapandariteman.mp3"
-            with open(voice_path, "rb") as voice:
-                await query.message.reply_voice(
-                    voice=InputFile(voice),
-                    caption="🗣️ Ucapan dari temanku biar yang ngucapin ultah ke kamu banyak 😁 💕"
-                )
-
-            # Kirim link hadiah
-            await query.message.reply_text(
-                "🎁 Klik link ini untuk membuka kejutan lainnya:\n"
-                "🔗 https://link.dana.id/danakaget?c=s89stf5z3&r=gcSt7Q&orderId=20250508101214423715010300166325321749866"
+        # Kirim voice message
+        voice_path = "ucapandariteman.mp3"
+        with open(voice_path, "rb") as voice:
+            await query.message.reply_voice(
+                voice=InputFile(voice),
+                caption="🗣️ Ucapan dari temanku biar yang ngucapin ultah ke kamu banyak 😁 💕"
             )
-    except httpx.ReadTimeout:
-        print("Timeout occurred during the request.")
-        await query.edit_message_text("Maaf, permintaan memakan waktu terlalu lama. Coba lagi nanti.")
-    except Exception as e:
-        print(f"Error: {e}")
-        await query.edit_message_text("Terjadi kesalahan, coba lagi nanti.")
+
+        # Kirim link hadiah
+        await query.message.reply_text(
+            "🎁 Klik link ini untuk membuka kejutan lainnya:\n"
+            "🔗 https://link.dana.id/danakaget?c=s89stf5z3&r=gcSt7Q&orderId=20250508101214423715010300166325321749866"
+        )
 
 # Main function to run the bot
 if __name__ == '__main__':
     import os
+    import asyncio
 
     TOKEN = "7587160420:AAHVyw83yOmhAjDYnvCkFCj5dXbmsdqa3Y8"
 
-    # Membuat aplikasi dengan pengaturan timeout
-    request_kwargs = {
-        'timeout': httpx.Timeout(30.0)  # Set timeout 30 detik
-    }
-
-    app = ApplicationBuilder().token(TOKEN).request_kwargs(request_kwargs).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
