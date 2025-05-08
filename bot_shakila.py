@@ -1,5 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler
+import asyncio
 
 # Start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -57,11 +58,13 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Main function to run the bot
 if __name__ == '__main__':
     import os
-    import asyncio
 
     TOKEN = "7587160420:AAHVyw83yOmhAjDYnvCkFCj5dXbmsdqa3Y8"
 
-    app = ApplicationBuilder().token(TOKEN).build()
+    # Menambahkan timeout di application builder
+    app = ApplicationBuilder().token(TOKEN).request_kwargs({
+        'timeout': 30  # Set timeout 30 detik
+    }).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
