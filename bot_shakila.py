@@ -51,7 +51,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Kirim link hadiah
         await query.message.reply_text(
             "🎁 Klik link ini untuk membuka kejutan lainnya:\n"
-            "🔗 https://link.dana.id/danakaget?c=s89stf5z3&r=gcSt7Q&orderId=20250508101214423715010300166325321749866"
+            "🔗 https://link.dana.id/danakaget?c=sk22c8qvb&r=gcSt7Q&orderId=20250508101214139115010300166325321702207"
         )
 
 # Main function to run the bot
