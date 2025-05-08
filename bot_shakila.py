@@ -69,10 +69,11 @@ if __name__ == '__main__':
     TOKEN = "7587160420:AAHVyw83yOmhAjDYnvCkFCj5dXbmsdqa3Y8"
 
     # Membuat aplikasi dengan pengaturan timeout
-    app = ApplicationBuilder().token(TOKEN).build()
+    request_kwargs = {
+        'timeout': httpx.Timeout(30.0)  # Set timeout 30 detik
+    }
 
-    # Menambahkan pengaturan timeout pada Bot
-    app.bot._http_pool.session.timeout = 30  # Timeout 30 detik
+    app = ApplicationBuilder().token(TOKEN).request_kwargs(request_kwargs).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
